@@ -2,3 +2,9 @@ docs/build/
 docs/source/generated
 .venv/
 .idea/
+.idea/.gitignore
+.idea/jmomden.iml
+.idea/modules.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/vcs.xml
