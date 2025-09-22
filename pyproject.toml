@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "jmomden"
+version = "1.0"
+authors = [
+  { name="Yan-Feng Wu", email="wuyf@fudan.edu.cn" },
+]
+description = "Density approximation from joint moments of two variables"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+keywords = ["two dimensions", "density approximation"]
+dependencies = [
+  "pytest",
+  "numpy",
+  "pearsondist",
+  "numpy",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/xmlongan/jmomden"
+"Bug Tracker" = "https://github.com/xmlongan/jmomden/issues"
