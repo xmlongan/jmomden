@@ -134,7 +134,7 @@ if __name__ == "__main__":
            'sigma': 0.61, 'rho': -0.7, 'mu': 0.0319}
     n = 8
     joint_moments = [[poly2num(joint_mom(i, j), par)
-                      for j in range(n - i + 1)] for i in range(n + 1)] # i + j = 8
+                      for j in range(n - i + 1)] for i in range(n + 1)]  # i + j = 8
 
     # density approximation
     den_orig = DenOrig(joint_moments, degree=4)

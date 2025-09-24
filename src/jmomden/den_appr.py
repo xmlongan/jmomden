@@ -1,9 +1,9 @@
+import warnings
 from collections.abc import Iterable
 import numpy as np
 
 from gramschmidt import GramSchmidt
 from pearsondist.pearson8 import Pearson8
-from den_orig import DenOrig
 
 
 class DenAppr:
@@ -97,7 +97,7 @@ class DenAppr:
         else:
             ratio = np.array([like_ratio(zeta1, x2) for x2 in zeta2])
         den = w2 * ratio
-        return DenOrig.make_positive(den, warn) if to_positive else den
+        return DenAppr.make_positive(den, warn) if to_positive else den
 
     def print_moment(self):
         """print moment of the transformed 2D variables"""
@@ -144,3 +144,20 @@ class DenAppr:
         print('\nCoefficients × orthonormal basis of 2D polynomials:')
         for i in range(len(c)):
             print(', '.join(f'{c[i][j]:12.9f}' for j in range(len(c[i]))))
+
+    @classmethod
+    def make_positive(cls, dx, warn=False):
+        """Make the density positive"""
+        if not isinstance(dx, Iterable):
+            return dx if dx > 0 else 1e-10
+        I = dx <= 0
+        if sum(I) > 0:
+            dx_min = min(dx[~I])
+            eps = min(1e-7, dx_min)
+            if warn:
+                msg = f'{sum(I)} non-positive densities in cond_den: '
+                msg += f'\n(min,max) = ({min(dx[I]):.7f},{max(dx[I]):.7f}) '
+                msg += f'adjust them to a small positive value ({eps:.7f}).'
+                warnings.warn(msg)
+            dx[I] = eps
+        return dx
