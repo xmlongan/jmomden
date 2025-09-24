@@ -2,6 +2,8 @@ from polyvect import PolyVect
 
 
 class GramSchmidt:
+    """Gram Schmidt Normalization"""
+
     degree: int = None
     moment: list = None
     basis: list = None
@@ -10,7 +12,8 @@ class GramSchmidt:
         r"""Initialize a GramSchmidt object.
 
         :param int degree: degree of the Orthonormal Basis.
-        :param list moment: moments of the distribution, :math:`\mu_0` should not be included.
+        :param list moment: moments of the distribution, :math:`\mu_0` should
+         not be included.
         """
         if len(moment) < 2 * degree:
             purpose = 'for computing the norm'

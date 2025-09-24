@@ -2,7 +2,10 @@ import math
 
 
 class PolyVect:
+    """Polynomial represented in a vector"""
+
     coef: list = None
+    """coefficients of the polynomial in ascending power order"""
 
     def __init__(self, coefficients):
         # [1, x, ..., x^n]
@@ -41,6 +44,7 @@ class PolyVect:
             return NotImplemented
 
     def eval(self, x):
+        """Evaluate the polynomial at x"""
         return sum(self[i] * (x ** i) for i in range(len(self)))
 
     def __str__(self):
