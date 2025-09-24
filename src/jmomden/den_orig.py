@@ -108,3 +108,23 @@ class DenOrig:
             bino = math.comb(m, i)
             f += bino * c ** i * jmoms[n + i][j]
         return f
+
+
+if __name__ == "__main__":
+    from ajdmom.mdl_1fsv.cond_joint_mom import joint_mom, poly2num
+
+    # joint moments E[v_t^i y_t^j] with order i + j <= 8
+    par = {'h': 1, 'v0': 0.010201, 'k': 6.21, 'theta': 0.019,
+           'sigma': 0.61, 'rho': -0.7, 'mu': 0.0319}
+    n = 8
+    joint_moments = [[poly2num(joint_mom(i, j), par)
+                      for j in range(n - i + 1)] for i in range(n + 1)] # i + j = 8
+
+    # density approximation
+    den_orig = DenOrig(joint_moments, degree=4)
+    den_orig.print_moment()
+
+    den_appr = den_orig.den_appr
+    den_appr.print_moment()
+    den_appr.print_basis()
+    den_appr.print_onb_coef()

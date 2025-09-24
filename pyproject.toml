@@ -21,7 +21,7 @@ dependencies = [
   "pytest",
   "numpy",
   "pearsondist",
-  "numpy",
+  "ajdmom",
 ]
 
 [project.urls]

@@ -2,8 +2,8 @@
 
 ## Description
 
-The package `jmomden` is a `Python` package designed for density approximation of 2D distributions
-whose joint moments are given. 
+The package `jmomden` is a `Python` package designed for density approximation of 2D 
+distributions whose joint moments are given. 
 
 ## Simple Usage
 
@@ -41,7 +41,7 @@ den_appr.print_onb_coef()
 
 ## Documentation
 
-The documentation probably would be hosted on <http://www.yyschools.com/jmomden/>
+The documentation would probably be hosted on <http://www.yyschools.com/jmomden/>
 
 ## Ongoing Development
 
