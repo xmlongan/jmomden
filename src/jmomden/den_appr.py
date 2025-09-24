@@ -3,6 +3,7 @@ import numpy as np
 
 from gramschmidt import GramSchmidt
 from pearsondist.pearson8 import Pearson8
+from den_orig import DenOrig
 
 
 class DenAppr:
@@ -14,7 +15,7 @@ class DenAppr:
     degree: int = None
     basis_d1: list = None
     basis_d2: list = None
-    onb_coef: np.array = None  # orthonormal basis coefficients
+    onb_coef: np.ndarray = None  # orthonormal basis coefficients
     pearson_d1: Pearson8 = None
     pearson_d2: Pearson8 = None
 
@@ -32,12 +33,14 @@ class DenAppr:
         self.comp_coef()
 
     def auxi_den(self, zeta1, zeta2):
+        """auxiliary density"""
         w1 = self.pearson_d1.pdf(zeta1)
         w2 = self.pearson_d2.pdf(zeta2)
         w = w1 * w2
         return w
 
     def comp_coef(self):
+        """compute coefficient"""
         n, m = len(self.basis_d1), len(self.basis_d2)
         onb_c = []
         for i in range(n):
@@ -51,7 +54,8 @@ class DenAppr:
             onb_c.append(c_row)
         self.onb_coef = np.array(onb_c)
 
-    def like_ratio(self, zeta1, zeta2):
+    def like_ratio(self, zeta1: float, zeta2: float) -> float:
+        """likelihood ratio"""
         # ratio = 0
         # for i in range(len(self.basis_d1)):
         #     bi = self.basis_d1[i]  # coef: [1, zeta1, zeta1^2, zeta1^3, zeta1^4]
@@ -67,6 +71,7 @@ class DenAppr:
         return ratio
 
     def pseu_den(self, zeta1, zeta2):
+        """pseudo joint density"""
         flag1 = isinstance(zeta1, Iterable)
         flag2 = isinstance(zeta2, Iterable)
         if not flag1 and not flag2:
@@ -83,7 +88,19 @@ class DenAppr:
             ratio = np.array([self.like_ratio(zeta1[i], zeta2[i]) for i in range(len(zeta1))])
         return w * ratio
 
+    def cond_den(self, zeta2, zeta1: float, to_positive=True, warn=False):
+        """conditional density of zeta2|zeta1"""
+        w2 = self.pearson_d2.pdf(zeta2)
+        like_ratio = self.like_ratio
+        if not isinstance(zeta2, Iterable):
+            ratio = like_ratio(zeta1, zeta2)
+        else:
+            ratio = np.array([like_ratio(zeta1, x2) for x2 in zeta2])
+        den = w2 * ratio
+        return DenOrig.make_positive(den, warn) if to_positive else den
+
     def print_moment(self):
+        """print moment of the transformed 2D variables"""
         mu_d1 = self.mu_d1
         mu_d2 = self.mu_d2
         print('\nMoments for the transformed variables:')
@@ -102,6 +119,7 @@ class DenAppr:
         print(f'mu_d2 = [{txt}]')
 
     def print_basis(self):
+        """print orthonormal basis polynomial coefficients"""
         basis_d1 = self.basis_d1
         basis_d2 = self.basis_d2
         print(f'\nTwo 1D orthonormal basis polynomial coefficients:')
@@ -121,6 +139,7 @@ class DenAppr:
             print(f'basis{i}: [{txt}]')
 
     def print_onb_coef(self):
+        """print coefficients × orthonormal basis of 2D polynomials"""
         c = self.onb_coef
         print('\nCoefficients × orthonormal basis of 2D polynomials:')
         for i in range(len(c)):

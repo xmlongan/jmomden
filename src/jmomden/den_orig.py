@@ -10,7 +10,10 @@ class DenOrig:
     """Density approximation for the original 2D variables"""
 
     jmom: list = None
+    """joint moment of the original 2D variables"""
+
     den_appr: DenAppr = None
+    """density approximation object for the transformed 2D variables"""
 
     def __init__(self, jmom: list, degree: int = 4):
         self.jmom = jmom
@@ -19,10 +22,18 @@ class DenOrig:
         mu_d1 = [jmom_tr(i, 0, jmom) for i in range(1, 2 * degree + 1)]
         mu_d2 = [jmom_tr(0, i, jmom) for i in range(1, 2 * degree + 1)]
         mu_d1d2 = [[jmom_tr(i, j, jmom) for j in range(degree + 1)] for i in range(degree + 1)]
-        # mu_d1d2 = joint_mom_tr_to(degree, jmom)
         self.den_appr = DenAppr(mu_d1, mu_d2, mu_d1d2, degree)
 
     def transform(self, v, y):
+        """Transform the original 2D variable
+
+        :param v: first variable
+        :type v: float | list
+        :param y: second variable
+        :type y: float | list
+        :return: transformed variable
+        :rtype: tuple of float | list
+        """
         cov = self.jmom[1][1] - self.jmom[1][0] * self.jmom[0][1]
         var = self.jmom[2][0] - (self.jmom[1][0]) ** 2
         c = - cov / var
@@ -31,20 +42,24 @@ class DenOrig:
         return zeta1, zeta2
 
     def join_den(self, v, y):
+        """Joint density of the original 2D variable"""
         zeta1, zeta2 = self.transform(v, y)
         det = 1
         return self.den_appr.pseu_den(zeta1, zeta2) * abs(det)
 
     def cond_den(self, v, y, to_positive=True, warn=False):
+        """conditional density of y|v"""
         # return self.cond_den_1(y, v, to_positive, warn)
         return self.cond_den_2(y, v, to_positive, warn)
 
     def cond_den_1(self, y, v, to_positive=True, warn=False):
+        """conditional density of y|v, method 1"""
         v_den = self.den_appr.pearson_d1.pdf(v)
         den = self.join_den(v_den, y) / v_den
         return DenOrig.make_positive(den, warn) if to_positive else den
 
     def cond_den_2(self, y, v, to_positive=True, warn=False):
+        """conditional density of y|v, method 2"""
         like_ratio = self.den_appr.like_ratio
 
         zeta1, zeta2 = self.transform(v, y)
@@ -63,6 +78,7 @@ class DenOrig:
         return DenOrig.make_positive(den, warn) if to_positive else den
 
     def print_moment(self):
+        """print moment of the original 2D variables"""
         mu = self.jmom
         n = self.den_appr.degree
         print(f'Original joint moments of (v_t, y_t):')
