@@ -2,7 +2,7 @@ import warnings
 from collections.abc import Iterable
 import numpy as np
 
-from gramschmidt import GramSchmidt
+from jmomden.gramschmidt import GramSchmidt
 from pearsondist.pearson8 import Pearson8
 
 

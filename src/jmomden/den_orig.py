@@ -3,7 +3,7 @@ import warnings
 from collections.abc import Iterable
 import numpy as np
 
-from den_appr import DenAppr
+from jmomden.den_appr import DenAppr
 
 
 class DenOrig:

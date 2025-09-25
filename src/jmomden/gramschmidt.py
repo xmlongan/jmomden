@@ -1,4 +1,4 @@
-from polyvect import PolyVect
+from jmomden.polyvect import PolyVect
 
 
 class GramSchmidt:
